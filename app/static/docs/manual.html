@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Полная API-документация</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      margin-top: 3rem;
+      color: #2c3e50;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 0.3rem;
+    }
+    .method-block {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin: 1rem 0;
+      background: #fff;
+      overflow: hidden;
+    }
+    .method-header {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 1rem;
+      background-color: #e6e6e6;
+    }
+    .method-header:hover {
+      background-color: #dcdcdc;
+    }
+    .method-type {
+      font-weight: bold;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      margin-right: 1rem;
+    }
+    .GET    { background-color: #2980b9; }
+    .POST   { background-color: #27ae60; }
+    .PUT    { background-color: #f39c12; }
+    .DELETE { background-color: #c0392b; }
+    .endpoint {
+      font-family: monospace;
+      color: #333;
+    }
+    .method-content {
+      display: none;
+      padding: 1rem 2rem;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
+    }
+    .json-block-wrapper {
+      position: relative;
+    }
+    .json-block {
+      background: #3a3f44;
+      color: #e0e0e0;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      background: #888;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background: #555;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f0f0f0;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 API Документация Библиотеки</h1>
+
+  <h2>🔐 Авторизация</h2>
+  <div id="auth"></div>
+
+  <h2>📚 Книги</h2>
+  <div id="books"></div>
+
+  <h2>👤 Читатели</h2>
+  <div id="readers"></div>
+
+  <h2>📦 Выдачи</h2>
+  <div id="borrow"></div>
+
+  <h2>🛡 Инструкция по токену</h2>
+  <div id="token"></div>
+
+  <script>
+    function toggle(header) {
+      const content = header.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    }
+
+    function copyToClipboard(button) {
+      const code = button.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = "Скопировано!";
+        setTimeout(() => button.textContent = "Скопировать", 1500);
+      });
+    }
+
+    const data = [
+      { section: 'auth', method: 'POST', path: '/auth/register', desc: 'Регистрация пользователя', json: '{\n  "email": "string",\n  "password": "string"\n}', params: [['email', 'string', 'Email'], ['password', 'string', 'Пароль']] },
+      { section: 'auth', method: 'POST', path: '/auth/login', desc: 'Аутентификация и получение JWT', json: '{\n  "email": "string",\n  "password": "string"\n}', params: [['email', 'string', 'Email'], ['password', 'string', 'Пароль']] },
+
+      { section: 'books', method: 'POST', path: '/books/', desc: 'Добавляет новую книгу', json: '{\n  "title": "string",\n  "author": "string",\n  "year": 1900,\n  "isbn": "string",\n  "copies": 1\n}', params: [['title', 'string', 'Название'], ['author', 'string', 'Автор'], ['year', 'int', 'Год'], ['isbn', 'string', 'ISBN'], ['copies', 'int', 'Кол-во']] },
+      { section: 'books', method: 'GET', path: '/books/', desc: 'Список всех книг', json: '', params: [] },
+      { section: 'books', method: 'GET', path: '/books/{id}', desc: 'Книга по ID', json: '', params: [['id', 'int', 'ID книги']] },
+      { section: 'books', method: 'PUT', path: '/books/{id}', desc: 'Обновляет книгу', json: '{\n  "title": "string",\n  "author": "string",\n  "year": 2000,\n  "isbn": "string",\n  "copies": 2\n}', params: [['id', 'int', 'ID книги'], ['title', 'string', 'Название'], ['author', 'string', 'Автор'], ['year', 'int', 'Год'], ['isbn', 'string', 'ISBN'], ['copies', 'int', 'Кол-во']] },
+      { section: 'books', method: 'DELETE', path: '/books/{id}', desc: 'Удаляет книгу', json: '', params: [['id', 'int', 'ID книги']] },
+
+      { section: 'readers', method: 'POST', path: '/readers/', desc: 'Создаёт читателя', json: '{\n  "full_name": "string",\n  "email": "string"\n}', params: [['full_name', 'string', 'Имя'], ['email', 'string', 'Email']] },
+      { section: 'readers', method: 'GET', path: '/readers/', desc: 'Список читателей', json: '', params: [] },
+      { section: 'readers', method: 'GET', path: '/readers/{id}', desc: 'Читатель по ID', json: '', params: [['id', 'int', 'ID']] },
+      { section: 'readers', method: 'PUT', path: '/readers/{id}', desc: 'Обновить читателя', json: '{\n  "full_name": "string",\n  "email": "string"\n}', params: [['full_name', 'string', 'Имя'], ['email', 'string', 'Email']] },
+      { section: 'readers', method: 'DELETE', path: '/readers/{id}', desc: 'Удалить читателя', json: '', params: [['id', 'int', 'ID']] },
+
+      { section: 'borrow', method: 'POST', path: '/borrow/', desc: 'Выдать книгу', json: '{\n  "reader_id": 1,\n  "book_id": 2\n}', params: [['reader_id', 'int', 'ID читателя'], ['book_id', 'int', 'ID книги']] },
+      { section: 'borrow', method: 'POST', path: '/borrow/return/{id}', desc: 'Вернуть книгу', json: '', params: [['id', 'int', 'ID выдачи']] },
+      { section: 'borrow', method: 'GET', path: '/borrow/', desc: 'Список выдач', json: '', params: [] },
+
+      { section: 'token', method: 'INFO', path: 'Authorization', desc: 'Добавьте заголовок Authorization: Bearer <токен> во все защищённые запросы.', json: 'Authorization: Bearer <ваш_токен>', params: [['Authorization', 'string', 'JWT заголовок']] },
+    ];
+
+    data.forEach(({ section, method, path, desc, json, params }) => {
+      const container = document.getElementById(section);
+      const block = document.createElement('div');
+      block.className = 'method-block';
+      block.innerHTML = `
+        <div class="method-header" onclick="toggle(this)">
+          <span class="method-type ${method}">${method}</span>
+          <span class="endpoint">${path}</span>
+        </div>
+        <div class="method-content">
+          <p>${desc}</p>
+          ${json ? `<h4>Пример JSON-запроса:</h4>
+          <div class="json-block-wrapper">
+            <button class="copy-btn" onclick="copyToClipboard(this)">Скопировать</button>
+            <pre class="json-block">${json}</pre>
+          </div>` : ''}
+          ${params.length ? '<h4>Параметры:</h4><table><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>' +
+            params.map(([k,t,d]) => `<tr><td>${k}</td><td>${t}</td><td>${d}</td></tr>`).join('') + '</table>' : ''}
+        </div>
+      `;
+      container.appendChild(block);
+    });
+  </script>
+</body>
+</html>
