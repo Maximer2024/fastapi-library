@@ -131,7 +131,7 @@
 
     const data = [
       { section: 'auth', method: 'POST', path: '/auth/register', desc: 'Регистрация пользователя', json: '{\n  "email": "string",\n  "password": "string"\n}', params: [['email', 'string', 'Email'], ['password', 'string', 'Пароль']] },
-      { section: 'auth', method: 'POST', path: '/auth/login', desc: 'Аутентификация и получение JWT', json: '{\n  "email": "string",\n  "password": "string"\n}', params: [['email', 'string', 'Email'], ['password', 'string', 'Пароль']] },
+      { section: 'auth', method: 'POST', path: '/auth/login', desc: 'Аутентификация и получение JWT. ⚠️ Важно: запрос должен быть в формате application/x-www-form-urlencoded, так как используется OAuth2PasswordRequestForm.', json: '{\n  "email": "string",\n  "password": "string"\n}', params: [['email', 'string', 'Email'], ['password', 'string', 'Пароль']] },
 
       { section: 'books', method: 'POST', path: '/books/', desc: 'Добавляет новую книгу', json: '{\n  "title": "string",\n  "author": "string",\n  "year": 1900,\n  "isbn": "string",\n  "copies": 1\n}', params: [['title', 'string', 'Название'], ['author', 'string', 'Автор'], ['year', 'int', 'Год'], ['isbn', 'string', 'ISBN'], ['copies', 'int', 'Кол-во']] },
       { section: 'books', method: 'GET', path: '/books/', desc: 'Список всех книг', json: '', params: [] },

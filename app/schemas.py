@@ -11,7 +11,7 @@ class UserOut(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BookCreate(BaseModel):
     title: str
@@ -24,7 +24,7 @@ class BookOut(BookCreate):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ReaderCreate(BaseModel):
     full_name: str
@@ -35,7 +35,7 @@ class ReaderOut(ReaderCreate):
     registered_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BorrowCreate(BaseModel):
     reader_id: int

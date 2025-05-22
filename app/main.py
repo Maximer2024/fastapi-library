@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -10,7 +11,11 @@ app.include_router(books.router)
 app.include_router(readers.router)
 app.include_router(borrow.router)
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+static_path = os.path.join(BASE_DIR, "static")
+
+if os.path.isdir(static_path):
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/docs/manual", response_class=HTMLResponse)
 async def manual_docs():

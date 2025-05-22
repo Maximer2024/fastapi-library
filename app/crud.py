@@ -2,10 +2,10 @@ from app import models, schemas
 from app.models import Borrowing, Book
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from datetime import datetime
+from datetime import datetime, timezone
 
 def create_book(db: Session, book: schemas.BookCreate):
-    db_book = models.Book(**book.dict())
+    db_book = models.Book(**book.model_dump())
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
@@ -65,6 +65,17 @@ def delete_reader(db: Session, reader_id: int):
     return reader
 
 def create_borrowing(db: Session, data: schemas.BorrowCreate):
+    active_count = db.query(Borrowing).filter(
+        Borrowing.reader_id == data.reader_id,
+        Borrowing.returned_at.is_(None)
+    ).count()
+
+    if active_count >= 3:
+        raise HTTPException(
+            status_code=400,
+            detail="Превышен лимит: нельзя взять более 3-х книг одновременно"
+        )
+
     book = db.query(Book).filter(Book.id == data.book_id).first()
     if not book or book.copies < 1:
         raise HTTPException(status_code=400, detail="Книга недоступна")
@@ -82,7 +93,7 @@ def return_book(db: Session, borrow_id: int):
     if not borrow or borrow.returned_at is not None:
         raise HTTPException(status_code=400, detail="Запись недействительна или уже возвращена")
 
-    borrow.returned_at = datetime.utcnow()
+    borrow.returned_at = datetime.now(timezone.utc)
 
     book = db.query(Book).filter(Book.id == borrow.book_id).first()
     book.copies += 1
